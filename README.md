@@ -1,5 +1,5 @@
 # Optimg
-* require ImageMagick *
+*require ImageMagick*
 
 Compress and optimize your image files.
 This script can optimize entire directories and use ImageMagick to reduce the size and optimize file. 
@@ -22,6 +22,6 @@ optimg.sh /path 1000 85
 ```
 
 ## TODO
--[ ] : Detect ImageMagick and abort it not found
--[ ] : Increase parameter
--[ ] : 
+-[] : Detect ImageMagick and abort it not found
+-[] : Increase parameter
+-[] : 
