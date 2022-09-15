@@ -4,38 +4,45 @@ readonly PROGNAME=$(basename $0)
 readonly ARGS="$@"
 
 
+###############
+#  Functions  #
+###############
+
+# Displays the usage
 usage() {
 	cat <<- EOF
-	usage: $PROGNAME <dir> <max_width> <quality OPTIONAL>
- 
-    Ce script optimise toutes les images contenu dans le répertoire passé en argument 1 le répertoire à optimiser et en second argument la taille maximale autorisée ( largeur )
-	Une largeur maximale doit être passée en argument 2. Les images plus grandes que cette taille seront redimensionnée. 
-
-	Ce script requiert ImageMagick
+	usage: $PROGNAME <path> <max_width> <quality OPTIONAL>
  
 	OPTIONS:
-	    dir         : nom du répertoire à optimiser
-	    max_width   : largeur maximale autorisée pour les images
-	    quality     : paramètre optionnel, permet de spécifier la qualité de sortie. Defaut : 90
+	    path        : path to optimize.
+	    max_width   : maximal width for you images.
+	    quality     : [optional] allows to to specify the ouput quality of your images. Example: 90 means a quality of 90%, so a loss of 10% 
  
-	Exemples:
-		Optimiser le répertoire my_image_folder et redimensionner les images qui font plus de 500px de large:
+	Example:
+		Optimize the directory my_image_folder and resize images bigger than 500px:
 		$PROGNAME /my_image_folder  500
 
-		Optimiser le répertoire my_image_folder et redimensionner les images qui font plus de 500px de large avec une qualité de 60%
+		Optimize the directory my_image_folder and resize images bigger than 500px and keep a quality of 60%
 		$PROGNAME /my_image_folder  500 60
 
 	EOF
 }
 
+# 
+check_dependecies() {
+  command -v mogrify >/dev/null 2>&1 || { echo >&2 "\033[0;31mERROR\033[0m: ImageMagick is required but it seems that is not installed or not present in your PATH. Visit: https://imagemagick.org."; exit 1; }
+}
+
 
 
 if [ -z "$1" ] || [ -z "$2" ]  ; then
-	echo "ERREUR : Paramètre manquants";
+	echo "\033[0;31mERROR\033[0m: Missing parameter(s): path or max width.";
 	usage
 	exit;
 fi
 
+
+check_dependecies
 
 
 
@@ -55,13 +62,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   export STAT_ARGS="-f %z";
   export SHELL_TO_USE=sh
 fi
-
-# Linux et Macos diffère
-# Linux
-
-
-# Macos 
-
 
 read -r -p "Optimize [$1] (max image width: $2px)? [y/N] " response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
